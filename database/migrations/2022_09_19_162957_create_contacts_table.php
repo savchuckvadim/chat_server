@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('contacts', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id');
+            $table->foreignId('contact_id');
             $table->timestamps();
         });
     }

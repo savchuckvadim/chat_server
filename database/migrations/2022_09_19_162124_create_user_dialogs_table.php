@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::create('user_dialogs', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->foreignId('user_id');
+            $table->foreignId('dialog_id');
         });
     }
 
