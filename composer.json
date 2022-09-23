@@ -7,12 +7,14 @@
     "require": {
         "php": "^8.0.2",
         "beyondcode/laravel-websockets": "^1.13",
-        "guzzlehttp/guzzle": "^7.2",
+        "guzzlehttp/guzzle": "^7.5",
         "laravel/fortify": "^1.13",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
-        "pusher/pusher-php-server": "^7.0"
+        "pusher/pusher-php-server": "^7.0",
+        "symfony/http-client": "^6.0",
+        "symfony/mailgun-mailer": "^6.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
