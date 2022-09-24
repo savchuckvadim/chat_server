@@ -14,6 +14,12 @@ class UserCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        $this->except('updated_at', 'name', 'surname');
+        return [
+
+            'totalCount' =>  $this->collection->count(),
+            'users' => $this->collection,
+            'resultCode' => 1,
+        ];
     }
 }
