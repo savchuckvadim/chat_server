@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contact;
+use App\Models\Dialog;
 use App\Models\User;
+use App\Models\UserDialog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -32,8 +34,22 @@ class ContactController extends Controller
             'user_id' => $authUserId,
             'contact_id' => $request->userId,
         ]);
-      
+
+        $dialog = Dialog::create();
+
+        $userDialogRelations = UserDialog::create([
+            'user_id' => $authUserId,
+            'dialog_id' => $dialog->id
+        ]);
+        $contactDialogRelations = UserDialog::create([
+            'user_id' => $contact->id,
+            'dialog_id' => $dialog->id
+        ]);
         $contact->save();
+        $dialog->save();
+        $userDialogRelations->save();
+        $contactDialogRelations->save();
+
         return response([
             'resultCode' => 1,
             'newContact' => User::find($request->userId)
@@ -95,5 +111,14 @@ class ContactController extends Controller
     public function destroy(Contact $contact)
     {
         //
+    }
+
+    public static function getContacts()
+    {
+        $user = Auth::user();
+        return response([
+            'resultCode' => 1,
+            'contacts' => $user->contacts
+        ]);
     }
 }

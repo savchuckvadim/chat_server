@@ -27,4 +27,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/contact', function (Request $request) {
         return ContactController::create($request);
     });
+
+    Route::get('/contacts', function () {
+        return ContactController::getContacts();
+    });
 });
