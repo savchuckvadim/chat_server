@@ -20,17 +20,18 @@ class UserResource extends JsonResource
         $isContacted = false;
 
         foreach ($authUser->contacts as $contact) {
-            if ($contact->id == $this->id) {
+            if ($contact->contact_id == $this->id) {
                 $isContacted = true;
             }
         }
-        
+
         return [
             'id' => $this->id,
             'email' => $this->email,
             'name' => $this->name,
             'contacts' => $this->contacts,
-            'isContacted' => $isContacted
+            'isContacted' => $isContacted,
+           
 
         ];
     }
