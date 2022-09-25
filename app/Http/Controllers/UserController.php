@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public static function getUsers($request){
+    public static function getUsers($request)
+    {
         $resultCode = 0;
         $authUser = Auth::user();
 
@@ -19,12 +20,20 @@ class UserController extends Controller
             $paginate = User::paginate($itemsCount);
             $collection = new UserCollection($paginate);
             return  $collection;
-
         } else {
             return response([
                 'resultCode' => $resultCode,
                 'message' => 'auth user is nod defined !'
             ]);
         }
+    }
+
+    public static function getDialogs()
+    {
+        $user = Auth::user();
+        return response([
+            'resultCode' => 1,
+            'dialogs' => $user->dialogs
+        ]);
     }
 }

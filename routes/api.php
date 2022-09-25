@@ -28,7 +28,9 @@ Route::middleware('auth:sanctum')->group(function () {
         return ContactController::create($request);
     });
 
-    Route::get('/contacts', function () {
-        return ContactController::getContacts();
+    Route::get('/dialogs', function () {
+        return UserController::getDialogs();
     });
+
+    
 });

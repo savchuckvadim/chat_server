@@ -46,4 +46,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Contact::class);
     }
+
+    public function dialogs()
+    {
+        return $this->belongsToMany(Dialog::class);
+    }
 }
