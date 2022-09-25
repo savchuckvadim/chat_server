@@ -28,9 +28,11 @@ class ContactController extends Controller
     {
 
         $authUserId = Auth::user()->id;
-        $contact = new Contact();
-        $contact->user_id = $authUserId;
-        $contact->contact_id = $request->userId;
+        $contact = Contact::create([
+            'user_id' => $authUserId,
+            'contact_id' => $request->userId,
+        ]);
+      
         $contact->save();
         return response([
             'resultCode' => 1,
