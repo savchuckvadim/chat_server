@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class UserResource extends JsonResource
 {
@@ -15,11 +16,21 @@ class UserResource extends JsonResource
     public function toArray($request)
     {
         // return parent::toArray($request);
+        $authUser = Auth::user();
+        $isContacted = false;
+
+        foreach ($authUser->contacts as $contact) {
+            if ($contact->id == $this->id) {
+                $isContacted = true;
+            }
+        }
+        
         return [
             'id' => $this->id,
             'email' => $this->email,
             'name' => $this->name,
             'contacts' => $this->contacts,
+            'isContacted' => $isContacted
 
         ];
     }
