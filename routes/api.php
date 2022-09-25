@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,5 +22,9 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::get('/users', function (Request $request) {
         return UserController::getUsers($request);
+    });
+
+    Route::post('/contact', function (Request $request) {
+        return ContactController::create($request);
     });
 });

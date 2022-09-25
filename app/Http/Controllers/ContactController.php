@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contact;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ContactController extends Controller
 {
@@ -22,9 +24,19 @@ class ContactController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public static function create($request)
     {
-        //
+
+        $authUserId = Auth::user()->id;
+        $contact = new Contact();
+        $contact->user_id = $authUserId;
+        $contact->contact_id = $request->userId;
+        $contact->save();
+        return response([
+            'resultCode' => 1,
+            'newContact' => User::find($request->userId)
+
+        ]);
     }
 
     /**
