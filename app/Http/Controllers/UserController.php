@@ -31,9 +31,10 @@ class UserController extends Controller
     public static function getDialogs()
     {
         $user = Auth::user();
+
         return response([
             'resultCode' => 1,
-            'dialogs' => $user->dialogs
+            'dialogs' => $user->activeDialogs
         ]);
     }
 }

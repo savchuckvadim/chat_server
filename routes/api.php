@@ -28,9 +28,15 @@ Route::middleware('auth:sanctum')->group(function () {
         return ContactController::create($request);
     });
 
+    Route::delete('/contact', function (Request $request) {
+        return ContactController::destroy($request);
+    });
+
     Route::get('/dialogs', function () {
         return UserController::getDialogs();
     });
 
-    
+
+
+
 });

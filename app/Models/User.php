@@ -51,4 +51,18 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Dialog::class);
     }
+
+    public function activeDialogs()
+    {
+
+        $contacts = $this->contacts;
+        $contactsIds = [];
+
+        foreach ($contacts as $contact) {
+            array_push($contactsIds, $contact->id);
+        };
+
+        return $this->dialogs()->collection()->diff(Dialog::whereIn('user_id', $contactsIds)->get());
+        
+    }
 }
