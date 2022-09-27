@@ -108,17 +108,17 @@ class ContactController extends Controller
      * @param  \App\Models\Contact  $contact
      * @return \Illuminate\Http\Response
      */
-    public static function destroy($request)
+    public static function destroy($userId)
     {
         $authUserId = Auth::user()->id;
 
         // UserDialog::where('user_id', $authUserId)->where('dialog_id', );
-        $contact = Contact::where('user_id', $authUserId)->where('contact_id', $request->userId);
+        $contact = Contact::where('user_id', $authUserId)->where('contact_id', $userId)->first();
         $contact->delete();
 
         return response([
             'resultCode' => 1,
-            'newContact' => User::find($request->userId)
+
 
         ]);
     }
