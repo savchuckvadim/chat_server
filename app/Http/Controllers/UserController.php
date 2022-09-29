@@ -34,7 +34,7 @@ class UserController extends Controller
 
         return response([
             'resultCode' => 1,
-            'dialogs' => $user->activeDialogs
+            'dialogs' => $user->dialogs
         ]);
     }
 }

@@ -28,7 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
         return ContactController::create($request);
     });
 
-    Route::get('contact/{userId}', function ($userId) {
+    Route::delete('contact/{userId}', function ($userId) {
         return  ContactController::destroy($userId);
     });
 

@@ -49,7 +49,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function dialogs()
     {
-        return $this->belongsToMany(Dialog::class);
+        return $this->belongsToMany(Dialog::class, 'user_dialogs', 'user_id', 'dialog_id');
     }
 
     public function activeDialogs()
@@ -63,6 +63,6 @@ class User extends Authenticatable implements MustVerifyEmail
         };
 
         return $this->dialogs()->collection()->diff(Dialog::whereIn('user_id', $contactsIds)->get());
-        
+
     }
 }
