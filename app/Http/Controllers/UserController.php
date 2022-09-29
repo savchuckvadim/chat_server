@@ -31,10 +31,23 @@ class UserController extends Controller
     public static function getDialogs()
     {
         $user = Auth::user();
+        $dialogs = $user->dialogs;
+        $users = [];
+        foreach($dialogs as $dialog)
+        {
 
+            $dialogsUsers = $dialog->users;
+            
+            foreach($dialogsUsers as $dialogsUser){
+                if ($dialogsUser->id !== $user->id){
+                    array_push($users, $dialogsUser);
+
+                }
+            }
+        }
         return response([
             'resultCode' => 1,
-            'dialogs' => $user->dialogs
+            'dialogs' => $users
         ]);
     }
 }
