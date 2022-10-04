@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\MessageCollection;
 use App\Models\Dialog;
 use Illuminate\Http\Request;
 
@@ -81,5 +82,12 @@ class DialogController extends Controller
     public function destroy(Dialog $dialog)
     {
         //
+    }
+
+    public static function getMessages(Dialog $dialog)
+    {
+        $messages = $dialog->messages;
+        $messgesCollection = new MessageCollection($messages);
+        return $messgesCollection;
     }
 }

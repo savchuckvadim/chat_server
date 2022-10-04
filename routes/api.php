@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\DialogController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\UserController;
 use App\Models\Dialog;
@@ -47,7 +48,7 @@ Route::middleware('auth:sanctum')->group(function () {
         $dialog = Dialog::find($dialogId);
         $messages = null;
         if ($dialog) {
-            $messages = $dialog->messages;
+            $messages = DialogController::getMessages($dialog);
             return response([
                 'resultCode' => 1,
                 'messages' => $messages,
