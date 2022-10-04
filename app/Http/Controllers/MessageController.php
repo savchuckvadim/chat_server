@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Message;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
 {
@@ -22,9 +23,19 @@ class MessageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public static function create($dialogId, $body)
     {
-        //
+        $author = Auth::user();
+        $message = new Message();
+        $message->dialog_id = $dialogId;
+        $message->body = $body;
+        $message->author_id = $author->id;
+
+        $message->save();
+        return response([
+            'resultCode' => 1,
+            'createdMessage' => $message
+        ]);
     }
 
     /**

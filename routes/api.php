@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\UserController;
 use App\Models\Dialog;
 use Illuminate\Http\Request;
@@ -38,10 +39,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::post('message', function (Request $request) {
-        return response([
-            'dialogId' => $request->dialogId,
-            'body' => $request->body
-        ]);
+        return MessageController::create($request->dialogId, $request->body);
     });
 
 
