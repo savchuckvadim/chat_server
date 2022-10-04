@@ -86,7 +86,7 @@ class DialogController extends Controller
 
     public static function getMessages(Dialog $dialog)
     {
-        $messages = $dialog->messages;
+        $messages = $dialog->messages->reverse();
         $messgesCollection = new MessageCollection($messages);
         return $messgesCollection;
     }
