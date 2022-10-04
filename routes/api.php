@@ -50,10 +50,16 @@ Route::middleware('auth:sanctum')->group(function () {
         $messages = null;
         if ($dialog) {
             $messages = $dialog->messages;
+            return response([
+                'resultCode' => 1,
+                'messages' => $messages,
+
+            ]);
+        } else {
+            return response([
+                'resultCode' => 1,
+                'messages' => []
+            ]);
         }
-        return response([
-            'messages' => $messages,
-            'dialog' => $dialog
-        ]);
     });
 });
