@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\UserController;
+use App\Models\Dialog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -36,7 +37,23 @@ Route::middleware('auth:sanctum')->group(function () {
         return UserController::getDialogs();
     });
 
+    Route::post('message', function (Request $request) {
+        return response([
+            'dialogId' => $request->dialogId,
+            'body' => $request->body
+        ]);
+    });
 
 
-
+    Route::get('messages/{dialogId}', function ($dialogId) {
+        $dialog = Dialog::find($dialogId);
+        $messages = null;
+        if ($dialog) {
+            $messages = $dialog->messages;
+        }
+        return response([
+            'messages' => $messages,
+            'dialog' => $dialog
+        ]);
+    });
 });

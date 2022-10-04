@@ -13,4 +13,7 @@ class Dialog extends Model
     {
         return $this->belongsToMany(User::class, 'user_dialogs', 'dialog_id', 'user_id');
     }
+    public function messages(){
+        return $this->hasMany(Message::class);
+    }
 }
