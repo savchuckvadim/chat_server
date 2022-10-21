@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\SendMessage;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,9 +33,13 @@ class MessageController extends Controller
         $message->author_id = $author->id;
 
         $message->save();
+        //DISPATCH EVENT
+        SendMessage::dispatch($message);
+
         return response([
             'resultCode' => 1,
-            'createdMessage' => $message
+            'createdMessage' => $message,
+            'SendMessage::dispatch($message);' => SendMessage::dispatch($message)
         ]);
     }
 

@@ -1,11 +1,15 @@
 <?php
 
+use App\Events\Presence;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DialogController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\UserController;
+use App\Listeners\PresenceListener;
 use App\Models\Dialog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,8 +22,20 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
+Broadcast::routes(['middleware' => ['auth:sanctum']]);
 Route::middleware('auth:sanctum')->group(function () {
+
+    ///////////////TOKENS
+
+    // Route::post('/tokens/create', function (Request $request) {
+    //     $token = $request->user()->createToken($request->token_name);
+
+    //     return ['token' => $token->plainTextToken];
+    // });
+    // Route::post('/sanctum/token', TokenController::class);
+
+    ///////////////USERS
+
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
@@ -61,4 +77,16 @@ Route::middleware('auth:sanctum')->group(function () {
             ]);
         }
     });
+
+    Route::get('/testingevent', function () {
+        $user = Auth::user();
+        Presence::dispatch($user);
+        return response([
+            'результат' => 'задиспатчилось',
+            // 'handle'=> PresenceListener::handle()
+        ]);
+    });
+
 });
+
+
