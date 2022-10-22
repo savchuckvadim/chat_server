@@ -18,9 +18,11 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return true;
 });
 
-Broadcast::channel('chat', function ($user, $roomId) {
+
+
+Broadcast::channel('chat.{roomId}', function ($user, $roomId) {
     // if ($user->canJoinRoom($roomId)) {
-    return ['id' => $user->id, 'name' => $user->name];
+        return ['id' => $user->id, 'name' => $user->name];
     // }
 });
 
