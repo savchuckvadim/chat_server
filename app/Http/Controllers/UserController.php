@@ -33,23 +33,23 @@ class UserController extends Controller
         $user = Auth::user();
         $dialogs = $user->dialogs;
         $users = [];
-        $allDialogsUsers = [];
+        // $allDialogsUsers = [];
         foreach ($dialogs as $dialog) {
 
             $dialogsUsers = $dialog->users;
-            array_push($allDialogsUsers, $dialogsUsers);
-
+            // array_push($allDialogsUsers, $dialogsUsers);
+            $dialogsMessages = $dialog->messages;
             foreach ($dialogsUsers as $dialogsUser) {
                 if ($dialogsUser->id !== $user->id) {
-                    array_push($users, $dialogsUser);
+                    array_push($users,['dialogsUser' => $dialogsUser, 'dialogsMessages' => $dialogsMessages]);
                 }
             }
         }
         return response([
             'resultCode' => 1,
             'dialogs' => array_reverse($users),
-            '$user' => Auth::user(),
-           
+            'authUser' => Auth::user(),
+
         ]);
     }
 }
