@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -22,8 +24,15 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 
 Broadcast::channel('chat.{roomId}', function ($user, $roomId) {
     // if ($user->canJoinRoom($roomId)) {
-        return ['id' => $user->id, 'name' => $user->name];
+    return ['id' => $user->id, 'name' => $user->name];
     // }
+});
+Broadcast::channel('dialog.{dialogId}', function ($dialogId) {
+    $authUser = Auth::user();
+    $user = User::where('id', $authUser->id)->first();
+    if ($user->canJoinDialog($dialogId)) {
+        return ['id' => $user->id, 'name' => $user->name];
+    }
 });
 
 Broadcast::channel('new-message', function () {

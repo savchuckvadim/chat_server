@@ -36,17 +36,19 @@ class ContactController extends Controller
         ]);
 
         $dialog = Dialog::create();
+        $contact->save();
+        $dialog->save();
+
 
         $userDialogRelations = UserDialog::create([
             'user_id' => $authUserId,
             'dialog_id' => $dialog->id
         ]);
         $contactDialogRelations = UserDialog::create([
-            'user_id' => $contact->id,
+            'user_id' => $contact->contact_id,
             'dialog_id' => $dialog->id
         ]);
-        $contact->save();
-        $dialog->save();
+
         $userDialogRelations->save();
         $contactDialogRelations->save();
 

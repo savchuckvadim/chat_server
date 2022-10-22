@@ -33,9 +33,11 @@ class UserController extends Controller
         $user = Auth::user();
         $dialogs = $user->dialogs;
         $users = [];
+        $allDialogsUsers = [];
         foreach ($dialogs as $dialog) {
 
             $dialogsUsers = $dialog->users;
+            array_push($allDialogsUsers, $dialogsUsers);
 
             foreach ($dialogsUsers as $dialogsUser) {
                 if ($dialogsUser->id !== $user->id) {
@@ -45,7 +47,9 @@ class UserController extends Controller
         }
         return response([
             'resultCode' => 1,
-            'dialogs' => array_reverse($users)
+            'dialogs' => array_reverse($users),
+            '$user' => Auth::user(),
+           
         ]);
     }
 }

@@ -63,6 +63,19 @@ class User extends Authenticatable implements MustVerifyEmail
         };
 
         return $this->dialogs()->collection()->diff(Dialog::whereIn('user_id', $contactsIds)->get());
+    }
 
+    public function canJoinDialog($dialogId)
+    {
+        $result = false;
+        $dialogs = $this->dialogs();
+        // foreach ($dialogs as $dialog) {
+        //     if ($dialog->id === $dialogId) {
+        $result = true;
+        //     }
+        // }
+
+
+        return $result;
     }
 }
