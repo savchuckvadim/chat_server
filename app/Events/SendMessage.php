@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Http\Resources\MessageResource;
 use App\Models\Message;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -24,7 +25,7 @@ class SendMessage  implements ShouldBroadcast
 
     public function __construct(Message $message)
     {
-        $this->message = $message;
+        $this->message = new MessageResource($message);
         return $this->message;
     }
 
