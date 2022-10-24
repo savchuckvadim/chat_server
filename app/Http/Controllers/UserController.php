@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\MessageCollection;
 use App\Http\Resources\UserCollection;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -35,13 +36,13 @@ class UserController extends Controller
         $users = [];
         // $allDialogsUsers = [];
         foreach ($dialogs as $dialog) {
-
+            $dialogId = $dialog->id;
             $dialogsUsers = $dialog->users;
             // array_push($allDialogsUsers, $dialogsUsers);
             $dialogsMessages = $dialog->messages;
             foreach ($dialogsUsers as $dialogsUser) {
                 if ($dialogsUser->id !== $user->id) {
-                    array_push($users,['dialogsUser' => $dialogsUser, 'dialogsMessages' => $dialogsMessages]);
+                    array_push($users, ['dialogId'=>$dialogId, 'dialogsUser' => $dialogsUser, 'dialogsMessages' => new MessageCollection($dialogsMessages) ]);
                 }
             }
         }

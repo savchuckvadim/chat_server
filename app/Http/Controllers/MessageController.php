@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\SendMessage;
+use App\Http\Resources\MessageResource;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -38,7 +39,7 @@ class MessageController extends Controller
 
         return response([
             'resultCode' => 1,
-            'createdMessage' => $message,
+            'createdMessage' => new MessageResource($message) ,
             'SendMessage::dispatch($message);' => SendMessage::dispatch($message)
         ]);
     }
