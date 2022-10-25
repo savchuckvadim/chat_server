@@ -23,11 +23,12 @@ class MessageResource extends JsonResource
         }
         return [
             'id' => $this->id,
+            'authorId' => $this->author_id,
             'isAuthorIsAuth' => $isAuthorIsAuth,
             'dialogId' => $this->dialog_id,
             'body' => $this->body,
             'created' => $this->created_at,
-            
+
         ];
     }
 }
