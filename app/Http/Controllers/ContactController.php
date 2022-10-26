@@ -39,9 +39,19 @@ class ContactController extends Controller
         $contact->save();
 
 
-        $existDialogAuth = UserDialog::where('user_id', Auth::user()->id)->first();
-        $existDialogUser = UserDialog::where('user_id', $request->userId)->first();
-        if (!$existDialogAuth && !$existDialogUser) {
+        $authUserDialogs = UserDialog::where('user_id', Auth::user()->id)->get();
+
+        $checkExistDialog = false;
+
+        foreach ($authUserDialogs as $dialog) {
+
+            $contactsDialog = UserDialog::where('dialog_id', $dialog->id)->where('user_id', $request->userId)->first();
+
+            if ($contactsDialog) {
+                $checkExistDialog = true;
+            }
+        }
+        if (!$checkExistDialog) {
             $dialog = Dialog::create();
             $userDialogRelations = UserDialog::create([
                 'user_id' => $authUserId,
@@ -59,7 +69,7 @@ class ContactController extends Controller
         return response([
             'resultCode' => 1,
             'newContact' => User::find($request->userId),
-            '!$existDialogAuth && !$existDialogUser' => !$existDialogAuth && !$existDialogUser
+            'checkExistDialog' => $checkExistDialog,
 
         ]);
     }
