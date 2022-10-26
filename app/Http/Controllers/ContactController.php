@@ -53,6 +53,7 @@ class ContactController extends Controller
         }
         if (!$checkExistDialog) {
             $dialog = Dialog::create();
+            $dialog->isGroup = $request->isGroup;
             $userDialogRelations = UserDialog::create([
                 'user_id' => $authUserId,
                 'dialog_id' => $dialog->id
