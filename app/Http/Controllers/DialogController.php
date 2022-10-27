@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\MessageCollection;
 use App\Models\Dialog;
+use App\Models\UserDialog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DialogController extends Controller
 {
@@ -93,6 +95,44 @@ class DialogController extends Controller
 
     public static function addGroupDialog($request)
     {
-        return response(['request' => $request]);
+        //users, dialogsName
+        if (count($request->users) < 1) {
+            return response([
+                'resultCode' => 0,
+                'message' => 'no users!'
+            ]);
+        }
+        if ($request->dialogsName == '') {
+            return response([
+                'resultCode' => 0,
+                'message' => 'no name!'
+            ]);
+        }
+
+        $authUser = Auth::user();
+        $dialog = Dialog::create();
+        $dialog->isGroup = true;
+        $dialog->name = $request->dialogsName;
+        $dialog->save();
+
+        $authDialogRelations = UserDialog::create([
+            'user_id' => $authUser->id,
+            'dialog_id' => $dialog->id
+        ]);
+        $authDialogRelations->save();
+        $users = [];
+        foreach ($request->users as $user) {
+            array_push($users, $user);
+               UserDialog::create([
+                    'user_id' => $user['id'],
+                    'dialog_id' => $dialog->id
+                ])->save();
+        }
+        return response([
+            'resultCode' => 1,
+            'createdDialog' => $dialog,
+            
+
+        ]);
     }
 }
