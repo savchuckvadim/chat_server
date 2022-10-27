@@ -42,11 +42,11 @@ class ContactController extends Controller
         $authUserDialogs = UserDialog::where('user_id', Auth::user()->id)->get();
 
         $checkExistDialog = false;
-
+        $contactsDialogs = [];
         foreach ($authUserDialogs as $dialog) {
 
-            $contactsDialog = UserDialog::where('dialog_id', $dialog->id)->where('user_id', $request->userId)->first();
-
+            $contactsDialog = UserDialog::where('dialog_id', $dialog->dialog_id)->where('user_id', $request->userId)->first();
+            array_push($contactsDialogs, $contactsDialog);
             if ($contactsDialog) {
                 $checkExistDialog = true;
             }
@@ -71,6 +71,8 @@ class ContactController extends Controller
             'resultCode' => 1,
             'newContact' => User::find($request->userId),
             'checkExistDialog' => $checkExistDialog,
+            '$contactsDialogs' => $contactsDialogs,
+            '$authUserDialogs' => $authUserDialogs
 
         ]);
     }

@@ -33,22 +33,35 @@ class UserController extends Controller
     {
         $user = Auth::user();
         $dialogs = $user->dialogs;
-        $users = [];
+        $resultDialogs = [];
+        $resultGroupDialogs = [];
         // $allDialogsUsers = [];
         foreach ($dialogs as $dialog) {
             $dialogId = $dialog->id;
             $dialogsUsers = $dialog->users;
             // array_push($allDialogsUsers, $dialogsUsers);
             $dialogsMessages = $dialog->messages;
+
+            $resultDialogsUsers = [];
+
             foreach ($dialogsUsers as $dialogsUser) {
                 if ($dialogsUser->id !== $user->id) {
-                    array_push($users, ['dialogId'=>$dialogId, 'dialogsUser' => $dialogsUser, 'dialogsMessages' => new MessageCollection($dialogsMessages) ]);
+                    array_push($resultDialogsUsers, $dialogsUser);
+
                 }
             }
+            
+            if (!$dialog->isGroup) {
+                array_push($resultDialogs, ['dialogId'=>$dialogId, 'dialogsUsers' => $resultDialogsUsers, 'dialogsMessages' => new MessageCollection($dialogsMessages) ]);
+            }else{
+                array_push($resultGroupDialogs, ['dialogId'=>$dialogId, 'dialogsUsers' => $resultDialogsUsers, 'dialogsMessages' => new MessageCollection($dialogsMessages) ]);
+            };
+
         }
         return response([
             'resultCode' => 1,
-            'dialogs' => array_reverse($users),
+            'dialogs' => array_reverse($resultDialogs),
+            'groupDialogs' => array_reverse($resultGroupDialogs),
             'authUser' => Auth::user(),
 
         ]);
