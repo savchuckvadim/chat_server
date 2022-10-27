@@ -90,4 +90,9 @@ class DialogController extends Controller
         $messgesCollection = new MessageCollection($messages);
         return $messgesCollection;
     }
+
+    public static function addGroupDialog($request)
+    {
+        return response(['request' => $request]);
+    }
 }

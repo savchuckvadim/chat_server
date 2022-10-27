@@ -55,6 +55,9 @@ Route::middleware('auth:sanctum')->group(function () {
         return UserController::getDialogs();
     });
 
+    Route::post('group-dialog', function (Request $request) {
+        return DialogController::addGroupDialog($request);
+    });
     Route::post('message', function (Request $request) {
         return MessageController::create($request->dialogId, $request->body);
     });
