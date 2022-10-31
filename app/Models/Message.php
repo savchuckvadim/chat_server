@@ -16,4 +16,15 @@ class Message extends Model
         'author_id',
     ];
 
+    public function dialog()
+    {
+        return $this->belongsTo(Dialog::class);
+    }
+
+    public function to()
+    {
+        $dialog = $this->dialog;
+        $users = $dialog->users;
+        return $users;
+    }
 }

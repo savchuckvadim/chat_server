@@ -47,16 +47,25 @@ class UserController extends Controller
             foreach ($dialogsUsers as $dialogsUser) {
                 if ($dialogsUser->id !== $user->id) {
                     array_push($resultDialogsUsers, $dialogsUser);
-
                 }
             }
-            
-            if (!$dialog->isGroup) {
-                array_push($resultDialogs, ['dialogId'=>$dialogId, 'dialogsUsers' => $resultDialogsUsers, 'dialogsMessages' => new MessageCollection($dialogsMessages) ]);
-            }else{
-                array_push($resultGroupDialogs, ['dialogId'=>$dialogId, 'dialogsUsers' => $resultDialogsUsers, 'dialogsMessages' => new MessageCollection($dialogsMessages) ]);
-            };
 
+            if (!$dialog->isGroup) {
+                array_push($resultDialogs, [
+                    'dialogId' => $dialogId,
+                    'isGroup' => $dialog->isGroup,
+                    'dialogsUsers' => $resultDialogsUsers,
+                    'dialogsMessages' => new MessageCollection($dialogsMessages)
+                ]);
+            } else {
+                array_push($resultGroupDialogs, [
+                    'dialogId' => $dialogId,
+                    'dialogName' => $dialog->name,
+                    'isGroup' => $dialog->isGroup,
+                    'dialogsUsers' => $resultDialogsUsers,
+                    'dialogsMessages' => new MessageCollection($dialogsMessages)
+                ]);
+            };
         }
         return response([
             'resultCode' => 1,

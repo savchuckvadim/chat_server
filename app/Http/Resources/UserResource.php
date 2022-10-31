@@ -31,7 +31,8 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'contacts' => $this->contacts,
             'isContacted' => $isContacted,
-           
+            
+
 
         ];
     }
