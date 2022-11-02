@@ -26,6 +26,7 @@ class MessageResource extends JsonResource
             'authorId' => $this->author_id,
             'isAuthorIsAuth' => $isAuthorIsAuth,
             'dialogId' => $this->dialog_id,
+            'recipients' => $this->recipients(),
             'body' => $this->body,
             'created' => $this->created_at,
 

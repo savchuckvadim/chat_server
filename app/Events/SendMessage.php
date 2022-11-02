@@ -11,6 +11,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Auth;
 
 class SendMessage  implements ShouldBroadcast
 {
@@ -36,7 +37,17 @@ class SendMessage  implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return [new PrivateChannel('new-message', $this->message)];
+        // $authUser = Auth::user();
+        // $isAuthUserIsRecipient = false;
+        // foreach ($this->message->recipients as $recipient) {
+        //     if ($authUser->id === $recipient->id) {
+        //         $isAuthUserIsRecipient = true;
+        //     }
+        // }
+        // if($isAuthUserIsRecipient){
+            return [new PrivateChannel('new-message', ['message' => $this->message, 'recipients' => $this->message->author_id])];
+        // }
+
     }
 
     public function broadcastAs()

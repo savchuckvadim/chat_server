@@ -21,7 +21,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
-        
+
     ];
 
     /**
@@ -78,5 +78,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
 
         return $result;
+    }
+    public function messages(){
+        return $this->hasManyThrough(Message::class, UserDialog::class);
     }
 }
