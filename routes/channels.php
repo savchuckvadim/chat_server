@@ -35,11 +35,11 @@ Broadcast::channel('dialog.{dialogId}', function ($dialogId) {
     }
 });
 
-Broadcast::channel('new-message.{userId}', function ($userId) {
+Broadcast::channel('new-message.{userId}', function ($user) {
 
     $authUser = Auth::user();
     $authUserId = $authUser->id;
 
-        return (int) $authUserId === (int) $userId->id;
+        return (int) $authUserId === (int) $user->id;
 
 });
