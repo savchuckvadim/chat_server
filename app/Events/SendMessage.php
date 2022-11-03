@@ -37,17 +37,14 @@ class SendMessage  implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        // $authUser = Auth::user();
-        // $isAuthUserIsRecipient = false;
-        // foreach ($this->message->recipients as $recipient) {
-        //     if ($authUser->id === $recipient->id) {
-        //         $isAuthUserIsRecipient = true;
-        //     }
-        // }
-        // if($isAuthUserIsRecipient){
-            return [new PrivateChannel('new-message', ['message' => $this->message, 'recipients' => $this->message->author_id])];
-        // }
+        $resultChannels = [];
+        $recipients = $this->message->recipients();
+        foreach ($recipients as $recipient) {
+            $channel = new PrivateChannel('new-message.'.$recipient->id, ['message' => $this->message]);
+            array_push($resultChannels, $channel);
+        }
 
+        return $resultChannels;
     }
 
     public function broadcastAs()

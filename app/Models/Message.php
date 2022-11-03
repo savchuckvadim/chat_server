@@ -45,4 +45,9 @@ class Message extends Model
 
         return $recipients;
     }
+
+    public function receivesBroadcastNotificationsOn()
+    {
+        return 'new-message';
+    }
 }

@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Events\SendMessage;
 use App\Http\Resources\MessageResource;
 use App\Models\Message;
+use App\Notifications\NewMessage;
 use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 
 class MessageController extends Controller
 {
@@ -34,13 +37,20 @@ class MessageController extends Controller
         $message->author_id = $author->id;
 
         $message->save();
+
+
         //DISPATCH EVENT
         SendMessage::dispatch($message);
+
+        //SEND NOTIFICATION
+        $recipients = $message->recipients();
+        Notification::send($recipients, new NewMessage($message));
+
 
         return response([
             'resultCode' => 1,
             'createdMessage' => new MessageResource($message) ,
-            'SendMessage::dispatch($message);' => SendMessage::dispatch($message)
+
         ]);
     }
 

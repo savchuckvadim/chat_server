@@ -29,7 +29,8 @@ class SendMessageListener
      */
     public function handle(SendMessage $event)
     {
-        return $event->message;
-        // return new PrivateChannel('new-message', $event->message);
+
+        // return $event->message;
+        return new PrivateChannel('new-message', $event->message->author_id);
     }
 }

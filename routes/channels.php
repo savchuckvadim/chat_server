@@ -35,9 +35,11 @@ Broadcast::channel('dialog.{dialogId}', function ($dialogId) {
     }
 });
 
-Broadcast::channel('new-message', function () {
-    // if ($user->canJoinRoom($roomId)) {
-    // return ['id' => $user->id, 'name' => $user->name];
-    return true;
-    // }
+Broadcast::channel('new-message.{userId}', function ($userId) {
+
+    $authUser = Auth::user();
+    $authUserId = $authUser->id;
+
+        return (int) $authUserId === (int) $userId->id;
+
 });
