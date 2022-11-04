@@ -42,16 +42,16 @@ class ContactController extends Controller
         $authUserDialogs = UserDialog::where('user_id', Auth::user()->id)->get();
 
         $checkExistDialog = false;
-        $contactsDialogs = [];
+        // $contactsDialogs = [];
         foreach ($authUserDialogs as $dialog) {
 
             $contactsDialog = UserDialog::where('dialog_id', $dialog->dialog_id)->where('user_id', $request->userId)->first();
-            array_push($contactsDialogs, $contactsDialog);
+            // array_push($contactsDialogs, $contactsDialog);
             if ($contactsDialog) {
                 $checkExistDialog = true;
             }
         }
-        if (!$checkExistDialog) {
+        if (!$contactsDialog) {
             $dialog = Dialog::create();
             $dialog->isGroup = $request->isGroup;
             $userDialogRelations = UserDialog::create([
@@ -65,14 +65,17 @@ class ContactController extends Controller
             $dialog->save();
             $userDialogRelations->save();
             $contactDialogRelations->save();
+        }else{
+            $dialog = null;
         }
 
         return response([
             'resultCode' => 1,
             'newContact' => User::find($request->userId),
-            'checkExistDialog' => $checkExistDialog,
-            '$contactsDialogs' => $contactsDialogs,
-            '$authUserDialogs' => $authUserDialogs
+            'contactsDialog' => $contactsDialog,
+            'dialog' => $dialog
+            // '$contactsDialogs' => $contactsDialogs,
+            // '$authUserDialogs' => $authUserDialogs
 
         ]);
     }
