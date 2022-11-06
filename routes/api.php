@@ -5,13 +5,14 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DialogController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\UserController;
+use App\Http\Resources\UserCollection;
 use App\Listeners\PresenceListener;
 use App\Models\Dialog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
-
+use App\Models\User;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -22,6 +23,7 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
 Broadcast::routes(['middleware' => ['auth:sanctum']]);
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -38,6 +40,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/user', function (Request $request) {
         return $request->user();
+    });
+    Route::get('find-user/{name}', function ($name) {
+        $users = User::where('name', 'LIKE', "%{$name}%")->get();
+        $collection = new UserCollection($users);
+
+        if ($users) {
+            return response(['searchingUsers' => $collection]);
+        }
     });
     Route::get('/users', function (Request $request) {
         return UserController::getUsers($request);
@@ -89,7 +99,4 @@ Route::middleware('auth:sanctum')->group(function () {
             // 'handle'=> PresenceListener::handle()
         ]);
     });
-
 });
-
-
