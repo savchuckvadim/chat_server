@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Support\Facades\Auth;
 
 class UserCollection extends ResourceCollection
 {
@@ -14,11 +15,12 @@ class UserCollection extends ResourceCollection
      */
     public function toArray($request)
     {
+        $authUser = Auth::user();
         $this->except('updated_at', 'name', 'surname');
         return [
 
             'totalCount' =>  $this->collection->count(),
-            'users' => $this->collection,
+            'users' => $this->collection->whereNotIn('id', $authUser->id)->toArray(),
             'resultCode' => 1,
         ];
     }

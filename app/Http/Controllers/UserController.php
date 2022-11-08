@@ -72,7 +72,7 @@ class UserController extends Controller
             'dialogs' => array_reverse($resultDialogs),
             'groupDialogs' => array_reverse($resultGroupDialogs),
             'authUser' => Auth::user(),
-            '$dialogs' => $dialogs
+            // '$dialogs' => $dialogs,
 
         ]);
     }
