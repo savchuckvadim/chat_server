@@ -57,6 +57,8 @@ Route::middleware('auth:sanctum')->group(function () {
         return ContactController::create($request);
     });
 
+    //DIALOGS
+
     Route::delete('contact/{userId}', function ($userId) {
         return  ContactController::destroy($userId);
     });
@@ -68,11 +70,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('group-dialog', function (Request $request) {
         return DialogController::addGroupDialog($request);
     });
+
+    //MESSAGES
     Route::post('message', function (Request $request) {
-        return MessageController::create($request->dialogId, $request->body);
+        return MessageController::create($request->dialogId, $request->body, $request->isForwarded);
     });
 
-
+// TODO: create method in Controller
     Route::get('messages/{dialogId}', function ($dialogId) {
         $dialog = Dialog::find($dialogId);
         $messages = null;
@@ -90,6 +94,10 @@ Route::middleware('auth:sanctum')->group(function () {
             ]);
         }
     });
+
+    // Route::post('forward-message', function (Request $request) {
+    //     return MessageController::create($request->dialogId, $request->body);
+    // });
 
     Route::get('/testingevent', function () {
         $user = Auth::user();

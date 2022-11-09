@@ -28,13 +28,15 @@ class MessageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public static function create($dialogId, $body)
+    public static function create($dialogId, $body, $isForwarded)
     {
         $author = Auth::user();
         $message = new Message();
         $message->dialog_id = $dialogId;
         $message->body = $body;
         $message->author_id = $author->id;
+        $message->forwarded = $isForwarded;
+
 
         $message->save();
 

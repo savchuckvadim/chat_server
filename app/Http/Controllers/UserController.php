@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\MessageCollection;
 use App\Http\Resources\UserCollection;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -46,7 +47,7 @@ class UserController extends Controller
 
             foreach ($dialogsUsers as $dialogsUser) {
                 if ($dialogsUser->id !== $user->id) {
-                    array_push($resultDialogsUsers, $dialogsUser);
+                    array_push($resultDialogsUsers, new UserResource($dialogsUser));
                 }
             }
 
