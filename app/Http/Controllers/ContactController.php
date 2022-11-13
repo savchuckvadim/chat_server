@@ -28,8 +28,11 @@ class ContactController extends Controller
      */
     public static function create($request)
     {
-
-        $authUserId = Auth::user()->id;
+        //userId
+        //isGroup:false
+        $authUser = Auth::user();
+        $contactUser = User::findOrFail($request->userId);
+        $authUserId = $authUser->id;
         $contact = Contact::create([
             'user_id' => $authUserId,
             'contact_id' => $request->userId,
@@ -39,18 +42,16 @@ class ContactController extends Controller
         $contact->save();
 
 
-        $authUserDialogs = UserDialog::where('user_id', Auth::user()->id)->get();
+        $authUserDialogs= User::find($authUserId)->getNotGroupDialogs();
+        // UserDialog::where('user_id', Auth::user()->id)->get();
+        //есть ли у пользователя не групповой диалог с этим контактом
 
-        $checkExistDialog = false;
-        // $contactsDialogs = [];
+        $contactsDialog = null;
         foreach ($authUserDialogs as $dialog) {
+           $contactsDialog = $contactUser->isDialogExistInNotGroupDialogs($dialog->id);
 
-            $contactsDialog = UserDialog::where('dialog_id', $dialog->dialog_id)->where('user_id', $request->userId)->first();
-            // array_push($contactsDialogs, $contactsDialog);
-            if ($contactsDialog) {
-                $checkExistDialog = true;
-            }
         }
+        $dialog = null;
         if (!$contactsDialog) {
             $dialog = Dialog::create();
             $dialog->isGroup = $request->isGroup;
@@ -65,17 +66,14 @@ class ContactController extends Controller
             $dialog->save();
             $userDialogRelations->save();
             $contactDialogRelations->save();
-        }else{
-            $dialog = null;
         }
 
         return response([
             'resultCode' => 1,
             'newContact' => User::find($request->userId),
             'contactsDialog' => $contactsDialog,
-            'dialog' => $dialog
-            // '$contactsDialogs' => $contactsDialogs,
-            // '$authUserDialogs' => $authUserDialogs
+            'newDialog' => $dialog,
+
 
         ]);
     }

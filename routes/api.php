@@ -54,6 +54,8 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::post('/contact', function (Request $request) {
+        //userId
+        //isGroup:false
         return ContactController::create($request);
     });
 
@@ -67,8 +69,12 @@ Route::middleware('auth:sanctum')->group(function () {
         return UserController::getDialogs();
     });
 
+    Route::get('/dialog/{dialogId}', function ($dialogId) {
+        return DialogController::getDialog($dialogId);
+    });
     Route::post('group-dialog', function (Request $request) {
-        return DialogController::addGroupDialog($request);
+        //$users, $dialogsName, $isGroup
+        return DialogController::addGroupDialog($request, true);
     });
 
     //MESSAGES

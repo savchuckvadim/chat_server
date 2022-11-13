@@ -52,7 +52,29 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Dialog::class, 'user_dialogs', 'user_id', 'dialog_id');
     }
+    public function getNotGroupDialogs()
+    {
+        $dialogs = $this->dialogs;
+        $notGroupDialogs = [];
+        foreach ($dialogs as $dialog) {
+            if (!$dialog->isGroup) {
+                array_push($notGroupDialogs, $dialog);
+            }
+        }
+        return $notGroupDialogs;
+    }
 
+    public function isDialogExistInNotGroupDialogs($dialogId)
+    {
+        $isExist = false;
+        $dialogs = $this->getNotGroupDialogs();
+        foreach ($dialogs as $dialog) {
+           if($dialog->id === $dialogId){
+            $isExist = true;
+           }
+        }
+        return $isExist;
+    }
     public function activeDialogs()
     {
 
@@ -79,7 +101,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
         return $result;
     }
-    public function messages(){
+    public function messages()
+    {
         return $this->hasManyThrough(Message::class, UserDialog::class);
     }
 }

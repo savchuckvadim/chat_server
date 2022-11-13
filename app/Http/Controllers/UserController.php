@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DialogResource;
 use App\Http\Resources\MessageCollection;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
@@ -39,40 +40,26 @@ class UserController extends Controller
         // $allDialogsUsers = [];
         foreach ($dialogs as $dialog) {
             $dialogId = $dialog->id;
-            $dialogsUsers = $dialog->users;
-            // array_push($allDialogsUsers, $dialogsUsers);
+
             $dialogsMessages = $dialog->messages;
 
             $resultDialogsUsers = [];
 
-            foreach ($dialogsUsers as $dialogsUser) {
-                if ($dialogsUser->id !== $user->id) {
-                    array_push($resultDialogsUsers, new UserResource($dialogsUser));
-                }
-            }
+
 
             if (!$dialog->isGroup) {
-                array_push($resultDialogs, [
-                    'dialogId' => $dialogId,
-                    'isGroup' => $dialog->isGroup,
-                    'dialogsUsers' => $resultDialogsUsers,
-                    'dialogsMessages' => new MessageCollection($dialogsMessages)
-                ]);
+                $resultDialog = new DialogResource($dialog);
+                array_push($resultDialogs, $resultDialog);
             } else {
-                array_push($resultGroupDialogs, [
-                    'dialogId' => $dialogId,
-                    'dialogName' => $dialog->name,
-                    'isGroup' => $dialog->isGroup,
-                    'dialogsUsers' => $resultDialogsUsers,
-                    'dialogsMessages' => new MessageCollection($dialogsMessages)
-                ]);
+                $resultDialog = new DialogResource($dialog);
+                array_push($resultGroupDialogs, $resultDialog);
             };
         }
         return response([
             'resultCode' => 1,
             'dialogs' => array_reverse($resultDialogs),
             'groupDialogs' => array_reverse($resultGroupDialogs),
-            'authUser' => Auth::user(),
+            // 'authUser' => Auth::user(),
             // '$dialogs' => $dialogs,
 
         ]);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DialogResource;
 use App\Http\Resources\MessageCollection;
 use App\Models\Dialog;
 use App\Models\UserDialog;
@@ -93,16 +94,17 @@ class DialogController extends Controller
         return $messgesCollection;
     }
 
-    public static function addGroupDialog($request)
+    public static function addGroupDialog($request, $isGroup)
     {
-        //users, dialogsName
+        //TODO:  fixed to addDialog if Group if Else
+        //$request: users, dialogsName  $isGroup
         if (count($request->users) < 1) {
             return response([
                 'resultCode' => 0,
                 'message' => 'no users!'
             ]);
         }
-        if ($request->dialogsName == '') {
+        if ($request->dialogsName == '' && $isGroup) {
             return response([
                 'resultCode' => 0,
                 'message' => 'no name!'
@@ -111,8 +113,11 @@ class DialogController extends Controller
 
         $authUser = Auth::user();
         $dialog = Dialog::create();
-        $dialog->isGroup = true;
-        $dialog->name = $request->dialogsName;
+        $dialog->isGroup = $isGroup;
+        if($isGroup){
+            $dialog->name = $request->dialogsName;
+        }
+
         $dialog->save();
 
         $authDialogRelations = UserDialog::create([
@@ -123,15 +128,35 @@ class DialogController extends Controller
         $users = [];
         foreach ($request->users as $user) {
             array_push($users, $user);
-               UserDialog::create([
-                    'user_id' => $user['id'],
-                    'dialog_id' => $dialog->id
-                ])->save();
+            UserDialog::create([
+                'user_id' => $user['id'],
+                'dialog_id' => $dialog->id
+            ])->save();
         }
         return response([
             'resultCode' => 1,
             'createdDialog' => $dialog,
-            
+
+
+        ]);
+    }
+
+    public static function getDialog($dialogId)
+    {
+
+        $resultCode = 1;
+        $message = '';
+
+        $dialog = Dialog::findOrFail($dialogId);
+        if (!$dialog) {
+            $resultCode = 0;
+            $message = 'dialog not found!';
+        };
+
+        return response([
+            'resultCode' => $resultCode,
+            'dialog' => new DialogResource($dialog),
+            'message' => $message,
 
         ]);
     }
