@@ -48,7 +48,7 @@ class MessageController extends Controller
         $recipients = $message->recipients();
         Notification::send($recipients, new NewMessage($message));
 
-
+        $message->isAuthorIsAuth = true;
         return response([
             'resultCode' => 1,
             'createdMessage' => new MessageResource($message) ,

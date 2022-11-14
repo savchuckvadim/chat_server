@@ -26,7 +26,9 @@ class SendMessage  implements ShouldBroadcast
 
     public function __construct(Message $message)
     {
-        $this->message = new MessageResource($message);
+        $this->message = $message;
+        $this->message->isAuthorIsAuth = false;
+        $this->message = new MessageResource($this->message);
         return $this->message;
     }
 
@@ -39,7 +41,10 @@ class SendMessage  implements ShouldBroadcast
     {
         $resultChannels = [];
         $recipients = $this->message->recipients();
+
+
         foreach ($recipients as $recipient) {
+
             $channel = new PrivateChannel('new-message.'.$recipient->id, ['message' => $this->message]);
             array_push($resultChannels, $channel);
         }

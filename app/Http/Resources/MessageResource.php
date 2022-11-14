@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Dialog;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,14 +18,17 @@ class MessageResource extends JsonResource
     {
         // return parent::toArray($request);
         $authUserId = Auth::user()->id;
+        $isGroup = Dialog::find($this->dialog_id)->isGroup;
         $isAuthorIsAuth = false;
-        if($this->author_id == $authUserId){
+        if ($this->author_id == $authUserId) {
             $isAuthorIsAuth = true;
         }
         return [
             'id' => $this->id,
+            'isGroup' =>  $isGroup,
+            'isForwarded' => $this->forwarded,
             'authorId' => $this->author_id,
-            'isAuthorIsAuth' => $isAuthorIsAuth,
+            'isAuthorIsAuth' => $this->isAuthorIsAuth,
             'dialogId' => $this->dialog_id,
             'recipients' => $this->recipients(),
             'body' => $this->body,

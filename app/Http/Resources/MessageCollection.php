@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Support\Facades\Auth;
 
 class MessageCollection extends ResourceCollection
 {
@@ -14,6 +15,19 @@ class MessageCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        $authUserId = Auth::user()->id;
+        $messages = $this->collection->toArray();
+        foreach ($messages as $message) {
+            if ((int) $message->author_id === (int) $authUserId) {
+                $message->isAuthorIsAuth = true;
+            } else {
+                $message->isAuthorIsAuth = false;
+                $message->authUserId = $authUserId;
+            }
+        }
+        // return parent::toArray($request);
+        return  $messages;
+
+
     }
 }
