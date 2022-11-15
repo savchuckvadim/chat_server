@@ -85,8 +85,13 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::put('message', function (Request $request) {
         //dialogId, body, isForwarded, isEdited
-       
+
         return MessageController::edit($request->messageId, $request->body);
+    });
+    Route::delete('message/{messageId}', function ($messageId) {
+        //messageId
+
+        return MessageController::destroy($messageId);
     });
 
 // TODO: create method in Controller
