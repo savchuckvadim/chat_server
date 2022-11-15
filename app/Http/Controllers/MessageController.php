@@ -52,7 +52,7 @@ class MessageController extends Controller
         $message->isAuthorIsAuth = true;
         return response([
             'resultCode' => 1,
-            'createdMessage' => new MessageResource($message) ,
+            'createdMessage' => new MessageResource($message),
 
         ]);
     }
@@ -85,9 +85,24 @@ class MessageController extends Controller
      * @param  \App\Models\Message  $message
      * @return \Illuminate\Http\Response
      */
-    public function edit(Message $message)
+    public static function edit($messageId, $body)
     {
-        //
+        $message = Message::find($messageId);
+        if ($message) {
+            $message->edit($body);
+            $resultMessage = new MessageResource($message);
+            return response([
+                'resultCode' => 1,
+                'editingMessage' => $resultMessage
+            ]);
+        } else {
+            $message->edit($body);
+            $resultMessage = new MessageResource($message);
+            return response([
+                'resultCode' => 0,
+                'message' => 'message not found'
+            ]);
+        }
     }
 
     /**

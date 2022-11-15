@@ -46,6 +46,13 @@ class Message extends Model
         return $recipients;
     }
 
+    public function edit($body)
+    {
+        $this->body = $body;
+        $this->isEditing = true;
+        $this->save();
+        return $this;
+    }
     public function receivesBroadcastNotificationsOn()
     {
         return 'new-message';

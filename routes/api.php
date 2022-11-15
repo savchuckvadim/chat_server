@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Resources\UserCollection;
 use App\Listeners\PresenceListener;
 use App\Models\Dialog;
+use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
@@ -81,6 +82,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('message', function (Request $request) {
         //dialogId, body, isForwarded, isEdited
         return MessageController::create($request->dialogId, $request->body, $request->isForwarded, $request->isEdited);
+    });
+    Route::put('message', function (Request $request) {
+        //dialogId, body, isForwarded, isEdited
+       
+        return MessageController::edit($request->messageId, $request->body);
     });
 
 // TODO: create method in Controller
