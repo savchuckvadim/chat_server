@@ -132,10 +132,10 @@ class MessageController extends Controller
      */
     public static function destroy($messageId)
     {
-        $authUserId = Auth::user()->id;
+       
         $message = Message::find($messageId);
 
-        if ($message && $message->authorId === $authUserId) {
+        if ($message) {
             $message->delete();
             return response([
                 'resultCode' => 1,
