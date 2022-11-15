@@ -17,7 +17,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('author_id');
             $table->foreignId('dialog_id');
-            $table->boolean('forwarded')->default(0);
+            $table->boolean('isForwarded')->default(0);
+            $table->boolean('isEdited')->default(0);
             $table->text('body',300);
             $table->timestamps();
         });

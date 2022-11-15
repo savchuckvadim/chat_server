@@ -79,7 +79,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //MESSAGES
     Route::post('message', function (Request $request) {
-        return MessageController::create($request->dialogId, $request->body, $request->isForwarded);
+        //dialogId, body, isForwarded, isEdited
+        return MessageController::create($request->dialogId, $request->body, $request->isForwarded, $request->isEdited);
     });
 
 // TODO: create method in Controller
