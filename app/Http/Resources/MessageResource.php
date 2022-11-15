@@ -27,7 +27,7 @@ class MessageResource extends JsonResource
             'id' => $this->id,
             'isGroup' =>  $isGroup,
             'isForwarded' => $this->isForwarded,
-            'isEditing' => $this->isEditing,
+            'isEdited' => $this->isEdited,
             'authorId' => $this->author_id,
             'isAuthorIsAuth' => $this->isAuthorIsAuth,
             'dialogId' => $this->dialog_id,

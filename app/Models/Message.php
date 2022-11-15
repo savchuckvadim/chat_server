@@ -49,7 +49,7 @@ class Message extends Model
     public function edit($body)
     {
         $this->body = $body;
-        $this->isEditing = true;
+        $this->isEdited = true;
         $this->save();
         return $this;
     }

@@ -89,11 +89,18 @@ class MessageController extends Controller
     {
         $message = Message::find($messageId);
         if ($message) {
-            $message->edit($body);
+            $message = $message->edit($body);
+
+
+            //DISPATCH EVENT
+            SendMessage::dispatch($message);
+
+            // $message->save();
             $resultMessage = new MessageResource($message);
+            $resultMessage->isAuthorIsAuth = true;
             return response([
                 'resultCode' => 1,
-                'editingMessage' => $resultMessage
+                'editedMessage' => $resultMessage
             ]);
         } else {
             $message->edit($body);
