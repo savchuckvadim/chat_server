@@ -85,15 +85,15 @@ class DialogController extends Controller
     public function destroy(Dialog $dialog)
     {
         $dialogId = $dialog->id;
-        $dialogsRelations = UserDialog::where('dialog_id', $dialogId)->all();
-        foreach($dialogsRelations as $relation){
+        $dialogsRelations = UserDialog::where('dialog_id', $dialogId)->get();
+        foreach ($dialogsRelations as $relation) {
             $relation->delete();
         }
         $dialog->delete();
 
         return response([
             'resultCode' => 1,
-            'deletedDialogId' =>$dialogId,
+            'deletedDialogId' => $dialogId,
             '$dialogsRelations' => $dialogsRelations
         ]);
     }
@@ -125,12 +125,12 @@ class DialogController extends Controller
         $authUser = Auth::user();
         $dialog = Dialog::create();
         $dialog->isGroup = $isGroup;
-        if($isGroup){
+        if ($isGroup) {
             $dialog->name = $request->dialogsName;
         }
 
         $dialog->save();
-
+        $resultDialog = new DialogResource($dialog);
         $authDialogRelations = UserDialog::create([
             'user_id' => $authUser->id,
             'dialog_id' => $dialog->id
@@ -146,7 +146,7 @@ class DialogController extends Controller
         }
         return response([
             'resultCode' => 1,
-            'createdDialog' => $dialog,
+            'createdDialog' => $resultDialog,
 
 
         ]);
