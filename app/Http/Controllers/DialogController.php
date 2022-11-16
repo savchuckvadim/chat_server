@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\DialogResource;
 use App\Http\Resources\MessageCollection;
+use App\Models\Contact;
 use App\Models\Dialog;
+use App\Models\Message;
 use App\Models\UserDialog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -84,17 +86,39 @@ class DialogController extends Controller
      */
     public function destroy(Dialog $dialog)
     {
+        $dialogsUsers = $dialog->users;
+        $messages = $dialog->messages;
+        Message::destroy($messages);
+
+        $authUserId = Auth::user()->id;
         $dialogId = $dialog->id;
         $dialogsRelations = UserDialog::where('dialog_id', $dialogId)->get();
         foreach ($dialogsRelations as $relation) {
             $relation->delete();
         }
-        $dialog->delete();
 
+        if (!$dialog->isGroup) {
+
+            $contactIds = [];
+            $dialogsUsers = $dialog->users;
+            foreach ($dialogsUsers as $user) {
+                if ($user->id !== $authUserId) {
+                    array_push($contactIds, $user->id);
+                    $contacts = Contact::where('user_id', $authUserId)->where('contact_id', $user->id)->get();
+                    foreach ($contacts as $contact) {
+                        $contact->delete();
+                    }
+                }
+            }
+        }
+
+        $dialog->delete();
         return response([
             'resultCode' => 1,
             'deletedDialogId' => $dialogId,
-            '$dialogsRelations' => $dialogsRelations
+            'deletedContactsIds' => $contactIds,
+
+
         ]);
     }
 
