@@ -84,7 +84,18 @@ class DialogController extends Controller
      */
     public function destroy(Dialog $dialog)
     {
-        //
+        $dialogId = $dialog->id;
+        $dialogsRelations = UserDialog::where('dialog_id', $dialogId)->all();
+        foreach($dialogsRelations as $relation){
+            $relation->delete();
+        }
+        $dialog->delete();
+
+        return response([
+            'resultCode' => 1,
+            'deletedDialogId' =>$dialogId,
+            '$dialogsRelations' => $dialogsRelations
+        ]);
     }
 
     public static function getMessages(Dialog $dialog)

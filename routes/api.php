@@ -60,22 +60,32 @@ Route::middleware('auth:sanctum')->group(function () {
         return ContactController::create($request);
     });
 
-    //DIALOGS
-
     Route::delete('contact/{userId}', function ($userId) {
         return  ContactController::destroy($userId);
     });
 
-    Route::get('/dialogs', function () {
+    //DIALOGS
+
+
+
+    Route::get('dialogs', function () {
         return UserController::getDialogs();
     });
 
-    Route::get('/dialog/{dialogId}', function ($dialogId) {
+    Route::get('dialog/{dialogId}', function ($dialogId) {
         return DialogController::getDialog($dialogId);
     });
     Route::post('group-dialog', function (Request $request) {
         //$users, $dialogsName, $isGroup
         return DialogController::addGroupDialog($request, true);
+    });
+    Route::delete('dialog/{dialogId}', function ($dialogId) {
+        $dialog = Dialog::find($dialogId);
+        if($dialog){
+            $controller = new DialogController($dialog);
+            return $controller->destroy($dialog);
+        };
+        return DialogController::getDialog($dialogId);
     });
 
     //MESSAGES
