@@ -76,7 +76,7 @@ Route::middleware('auth:sanctum')->group(function () {
         return DialogController::getDialog($dialogId);
     });
     Route::post('group-dialog', function (Request $request) {
-        //$users, $dialogsName, $isGroup
+        //$users, $dialogsName, $isGroup, id?=null if null->add else -> edit
         return DialogController::addGroupDialog($request, true);
     });
     Route::delete('dialog/{dialogId}', function ($dialogId) {

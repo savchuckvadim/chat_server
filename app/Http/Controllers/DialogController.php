@@ -147,35 +147,88 @@ class DialogController extends Controller
         }
 
         $authUser = Auth::user();
-        $dialog = Dialog::create();
-        $dialog->isGroup = $isGroup;
-        if ($isGroup) {
-            $dialog->name = $request->dialogsName;
-        }
+        if (!$request->dialogId) { //если с фронта не передан ID диалога, значит диалог создается
+            $dialog = Dialog::create();
+            $dialog->isGroup = $isGroup;
+            if ($isGroup) {
+                $dialog->name = $request->dialogsName;
+            }
 
-        $dialog->save();
-        $resultDialog = new DialogResource($dialog);
-        $authDialogRelations = UserDialog::create([
-            'user_id' => $authUser->id,
-            'dialog_id' => $dialog->id
-        ]);
-        $authDialogRelations->save();
-        $users = [];
-        foreach ($request->users as $user) {
-            array_push($users, $user);
-            UserDialog::create([
-                'user_id' => $user['id'],
+            $dialog->save();
+            $resultDialog = new DialogResource($dialog);
+            $authDialogRelations = UserDialog::create([
+                'user_id' => $authUser->id,
                 'dialog_id' => $dialog->id
-            ])->save();
+            ]);
+            $authDialogRelations->save();
+            $users = [];
+            foreach ($request->users as $user) {
+                array_push($users, $user);
+                UserDialog::create([
+                    'user_id' => $user['id'],
+                    'dialog_id' => $dialog->id
+                ])->save();
+            }
+            return response([
+                'resultCode' => 1,
+                'createdDialog' => $resultDialog,
+                'editedDialog' => null
+
+
+            ]);
+        } else { //если ID пришёл, значит надо отредактировать диалог
+            $dialog = Dialog::findOrFail($request->dialogId);
+            if ($dialog) {
+                $dialog->name = $request->dialogsName;
+                $oldUsers = $dialog->users;
+                foreach ($oldUsers as $oldUser) {
+                    $isOldUserInNewUsers = false;
+                    if ($oldUser['id'] != $authUser->id) {
+                        foreach ($request->users as $newUser) {
+                            if ($oldUser['id'] != $newUser['id']) {
+                                $isOldUserInNewUsers = true;
+                            }
+                        }
+                        if (!$isOldUserInNewUsers) {
+                            $oldRelations = UserDialog::where('user_id', $oldUser['id'])->where('dialog_id', $request->dialogId)->get();
+                            foreach ($oldRelations as  $oldRelation) {
+                                $oldRelation->delete();
+                            }
+                        }
+                    }
+                }
+                foreach ($request->users as $newUser) {
+                    $isOldUserInNewUsers = false;
+                    if ($newUser['id'] != $authUser->id) {
+                        foreach ($oldUsers as $oldUser) {
+                            if ($oldUser['id'] != $newUser['id']) {
+                                $isOldUserInNewUsers = true;
+                            }
+                        }
+                        if (!$isOldUserInNewUsers) {
+                            $newRelation = UserDialog::create([
+                                'user_id' => $newUser['id'],
+                                'dialog_id' => $request->dialogId
+                            ])->save();
+
+                            // foreach ($oldRelations as  $oldRelation) {
+                            //     $oldRelation->delete();
+                            // }
+                        }
+                    }
+                }
+                $dialog->save();
+                $resultDialog = new DialogResource($dialog);
+                return response([
+                    'resultCode' => 1,
+                    'createdDialog' =>  null,
+                    'editedDialog' => $resultDialog
+
+
+                ]);
+            }
         }
-        return response([
-            'resultCode' => 1,
-            'createdDialog' => $resultDialog,
-
-
-        ]);
     }
-
     public static function getDialog($dialogId)
     {
 
