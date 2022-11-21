@@ -88,6 +88,7 @@ class DialogController extends Controller
     {
         $dialogsUsers = $dialog->users;
         $messages = $dialog->messages;
+        $contactIds = [];
         Message::destroy($messages);
 
         $authUserId = Auth::user()->id;
@@ -98,14 +99,18 @@ class DialogController extends Controller
         }
 
         if (!$dialog->isGroup) {
-
-            $contactIds = [];
+            array_push($contactIds, $authUserId);
             $dialogsUsers = $dialog->users;
             foreach ($dialogsUsers as $user) {
                 if ($user->id !== $authUserId) {
                     array_push($contactIds, $user->id);
-                    $contacts = Contact::where('user_id', $authUserId)->where('contact_id', $user->id)->get();
-                    foreach ($contacts as $contact) {
+                    $contactsAuth = Contact::where('user_id', $authUserId)->where('contact_id', $user->id)->get();
+                    $contactsUser = Contact::where('user_id', $user->id)->where('contact_id', $authUserId)->get();
+
+                    foreach ($contactsAuth as $contact) {
+                        $contact->delete();
+                    }
+                    foreach ($contactsUser as $contact) {
                         $contact->delete();
                     }
                 }

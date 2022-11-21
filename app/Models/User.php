@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -52,6 +55,15 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Dialog::class, 'user_dialogs', 'user_id', 'dialog_id');
     }
+
+    public function updateName($userName)
+    {
+        Validator::make(['name' => $userName], ['name' => [ 'string', 'max:255',  Rule::unique(User::class)]])->validate();
+        $this->name = $userName;
+        $this->save();
+        $user = new UserResource($this);
+        return $user;
+    }
     public function getNotGroupDialogs()
     {
         $dialogs = $this->dialogs;
@@ -69,9 +81,9 @@ class User extends Authenticatable implements MustVerifyEmail
         $isExist = false;
         $dialogs = $this->getNotGroupDialogs();
         foreach ($dialogs as $dialog) {
-           if($dialog->id === $dialogId){
-            $isExist = true;
-           }
+            if ($dialog->id === $dialogId) {
+                $isExist = true;
+            }
         }
         return $isExist;
     }

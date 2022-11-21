@@ -39,6 +39,15 @@ Route::middleware('auth:sanctum')->group(function () {
 
     ///////////////USERS
 
+    Route::put('name', function (Request $request) {
+        $userId = Auth::user()->id;
+        $user = User::find($userId);
+        $updatinUser = $user->updateName($request->name);
+        return response([
+            'resultCode' => 1,
+            'updatingUser' => $updatinUser
+        ]);
+    });
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
@@ -81,7 +90,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::delete('dialog/{dialogId}', function ($dialogId) {
         $dialog = Dialog::find($dialogId);
-        if($dialog){
+        if ($dialog) {
             $controller = new DialogController($dialog);
             return $controller->destroy($dialog);
         };
@@ -104,7 +113,7 @@ Route::middleware('auth:sanctum')->group(function () {
         return MessageController::destroy($messageId);
     });
 
-// TODO: create method in Controller
+    // TODO: create method in Controller
     Route::get('messages/{dialogId}', function ($dialogId) {
         $dialog = Dialog::find($dialogId);
         $messages = null;
