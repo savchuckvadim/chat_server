@@ -18,6 +18,7 @@ return new class extends Migration
             $table->timestamps();
             $table->foreignId('user_id');
             $table->foreignId('dialog_id');
+            $table->boolean('isSound')->default(true);
         });
     }
 
