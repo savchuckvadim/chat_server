@@ -5,6 +5,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DialogController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\UserController;
+use App\Http\Resources\DialogResource;
 use App\Http\Resources\UserCollection;
 use App\Listeners\PresenceListener;
 use App\Models\Dialog;
@@ -14,6 +15,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
+use App\Models\UserDialog;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -76,7 +79,6 @@ Route::middleware('auth:sanctum')->group(function () {
     //DIALOGS
 
 
-
     Route::get('dialogs', function () {
         return UserController::getDialogs();
     });
@@ -96,6 +98,25 @@ Route::middleware('auth:sanctum')->group(function () {
         };
         return DialogController::getDialog($dialogId);
     });
+
+    Route::put('sound-dialog', function (Request $request) {
+        //$dialogId, $isSound
+        $authUserId = Auth::user()->id;
+        $relation = UserDialog::where('user_id', $authUserId)->where('dialog_id', $authUserId)->first();
+        if ($relation->isSound != $request->isSound) {
+            $relation->isSound = $request->isSound;
+            $relation->save();
+        }
+        $dialog = Dialog::find($request->dialogId);
+        $resultDialog = new DialogResource($dialog);
+        return response([
+            'resultCode' => 1,
+            'updatingDialog' => $resultDialog
+        ]);
+    });
+
+
+
 
     //MESSAGES
     Route::post('message', function (Request $request) {
