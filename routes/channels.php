@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
@@ -22,9 +23,14 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 
 
 
-Broadcast::channel('chat.{roomId}', function ($user, $roomId) {
+Broadcast::channel('chat', function ($user) {
     // if ($user->canJoinRoom($roomId)) {
-    return ['id' => $user->id, 'name' => $user->name];
+    $user = User::find($user->id);
+    $user->isActive = true;
+    $user->save();
+    $resource = new UserResource($user);
+    // return
+    return ['id' =>$user->id, 'name' =>$user->name, 'isActive' =>$user->isActive,];
     // }
 });
 Broadcast::channel('dialog.{dialogId}', function ($dialogId) {
@@ -40,6 +46,5 @@ Broadcast::channel('new-message.{userId}', function ($user) {
     $authUser = Auth::user();
     $authUserId = $authUser->id;
 
-        return (int) $authUserId === (int) $user->id;
-
+    return (int) $authUserId === (int) $user->id;
 });

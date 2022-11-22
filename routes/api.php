@@ -42,10 +42,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('name', function (Request $request) {
         $userId = Auth::user()->id;
         $user = User::find($userId);
-        $updatinUser = $user->updateName($request->name);
+        $updatingUser = $user->updateName($request->name);
         return response([
             'resultCode' => 1,
-            'updatingUser' => $updatinUser
+            'updatingUser' => $updatingUser
         ]);
     });
     Route::get('/user', function (Request $request) {

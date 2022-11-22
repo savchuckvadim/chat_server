@@ -31,7 +31,10 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'contacts' => $this->contacts,
             'isContacted' => $isContacted,
-            
+            'isSound' => $this->isSound,
+            'isActive' => $this->isActive,
+            'update' => $this->updated_at
+
 
 
         ];

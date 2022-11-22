@@ -22,7 +22,7 @@ class DialogResource extends JsonResource
         $dialogsMessages = $this->messages;
         $isSound = true;
         $resultDialogsUsers = [];
-        $relations = UserDialog::where('user_id', $user->id)->where('dialog_id', $this->id)->get;
+        $relations = UserDialog::where('user_id', $user->id)->where('dialog_id', $this->id)->get();
 
         if (count($relations) > 0) {
             $isSound = $relations[0]->isSound;
