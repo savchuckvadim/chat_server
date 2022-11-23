@@ -102,16 +102,20 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('sound-dialog', function (Request $request) {
         //$dialogId, $isSound
         $authUserId = Auth::user()->id;
-        $relation = UserDialog::where('user_id', $authUserId)->where('dialog_id', $authUserId)->first();
-        if ($relation->isSound != $request->isSound) {
+        $relation = UserDialog::where('user_id', $authUserId)->where('dialog_id', $request->dialogId)->first();
+        // if ($relation->isSound != $request->isSound) {
             $relation->isSound = $request->isSound;
             $relation->save();
-        }
+        // }
         $dialog = Dialog::find($request->dialogId);
         $resultDialog = new DialogResource($dialog);
         return response([
             'resultCode' => 1,
-            'updatingDialog' => $resultDialog
+            'updatingDialog' => $resultDialog,
+            '$relation->isSound' => $relation->isSound,
+            '$request->isSound' => $request->isSound,
+            '$relation' => $relation,
+            '$dialog ' => $dialog
         ]);
     });
 
