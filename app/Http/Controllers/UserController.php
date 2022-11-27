@@ -16,6 +16,8 @@ class UserController extends Controller
     {
         $resultCode = 0;
         $authUser = Auth::user();
+        $touchUser = User::find($authUser->id);
+        $touchUser->touch();
 
         if ($authUser) {
             $resultCode = 1;
@@ -34,6 +36,8 @@ class UserController extends Controller
     public static function getDialogs()
     {
         $user = Auth::user();
+        $touchUser = User::find($user->id);
+        $touchUser->touch();
         $dialogs = $user->dialogs;
         $resultDialogs = [];
         $resultGroupDialogs = [];

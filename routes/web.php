@@ -18,9 +18,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Route::get('/home', function () {
-//     $authUser = Auth::user();
-//     if ($authUser) {
-//         return redirect(env('SPA_URL'), $authUser->email);
-//     }
-// });
+Route::get('/home', function () {
+    // $authUser = Auth::user();
+    // if ($authUser) {
+        return redirect(env('SPA_URL'));
+    // }
+});

@@ -25,12 +25,12 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 
 Broadcast::channel('chat', function ($user) {
     // if ($user->canJoinRoom($roomId)) {
-    $user = User::find($user->id);
-    $user->isActive = true;
-    $user->save();
-    $resource = new UserResource($user);
+    // $user = User::find($user->id);
+    // $user->isActive = true;
+    // $user->save();
+    // $resource = new UserResource($user);
     // return
-    return ['id' =>$user->id, 'name' =>$user->name, 'isActive' =>$user->isActive,];
+    return $user->id;
     // }
 });
 Broadcast::channel('dialog.{dialogId}', function ($dialogId) {

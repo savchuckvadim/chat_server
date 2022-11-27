@@ -58,7 +58,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function updateName($userName)
     {
-        Validator::make(['name' => $userName], ['name' => [ 'string', 'max:255',  Rule::unique(User::class)]])->validate();
+        Validator::make(['name' => $userName], ['name' => ['string', 'max:255',  Rule::unique(User::class)]])->validate();
         $this->name = $userName;
         $this->save();
         $user = new UserResource($this);
@@ -71,6 +71,7 @@ class User extends Authenticatable implements MustVerifyEmail
         foreach ($dialogs as $dialog) {
             if (!$dialog->isGroup) {
                 array_push($notGroupDialogs, $dialog);
+                //7
             }
         }
         return $notGroupDialogs;
@@ -78,11 +79,13 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function isDialogExistInNotGroupDialogs($dialogId)
     {
-        $isExist = false;
+        $isExist = null;
+        // $existDialogsIds = [];
         $dialogs = $this->getNotGroupDialogs();
         foreach ($dialogs as $dialog) {
-            if ($dialog->id === $dialogId) {
-                $isExist = true;
+            if ((int)$dialog->id == (int) $dialogId) {
+                $isExist = $dialogId;
+                // array_push($existDialogsIds, $dialog->id);
             }
         }
         return $isExist;

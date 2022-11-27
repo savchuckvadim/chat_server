@@ -7,6 +7,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\UserController;
 use App\Http\Resources\DialogResource;
 use App\Http\Resources\UserCollection;
+use App\Http\Resources\UserResource;
 use App\Listeners\PresenceListener;
 use App\Models\Dialog;
 use App\Models\Message;
@@ -52,6 +53,9 @@ Route::middleware('auth:sanctum')->group(function () {
         ]);
     });
     Route::get('/user', function (Request $request) {
+        $authUser = Auth::user();
+        $touchUser = User::find($authUser->id);
+        $touchUser->touch();
         return $request->user();
     });
     Route::get('find-user/{name}', function ($name) {
@@ -75,6 +79,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('contact/{userId}', function ($userId) {
         return  ContactController::destroy($userId);
     });
+
+ 
 
     //DIALOGS
 
@@ -104,18 +110,15 @@ Route::middleware('auth:sanctum')->group(function () {
         $authUserId = Auth::user()->id;
         $relation = UserDialog::where('user_id', $authUserId)->where('dialog_id', $request->dialogId)->first();
         // if ($relation->isSound != $request->isSound) {
-            $relation->isSound = $request->isSound;
-            $relation->save();
+        $relation->isSound = $request->isSound;
+        $relation->save();
         // }
         $dialog = Dialog::find($request->dialogId);
         $resultDialog = new DialogResource($dialog);
         return response([
             'resultCode' => 1,
             'updatingDialog' => $resultDialog,
-            '$relation->isSound' => $relation->isSound,
-            '$request->isSound' => $request->isSound,
-            '$relation' => $relation,
-            '$dialog ' => $dialog
+
         ]);
     });
 

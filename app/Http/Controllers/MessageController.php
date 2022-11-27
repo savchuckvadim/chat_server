@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\SendMessage;
 use App\Http\Resources\MessageResource;
 use App\Models\Message;
+use App\Models\User;
 use App\Notifications\NewMessage;
 use Illuminate\Http\Request;
 
@@ -32,6 +33,8 @@ class MessageController extends Controller
     {
         //dialogId, body, isForwarded, isEdited
         $author = Auth::user();
+        $touchUser = User::find($author->id);
+        $touchUser->touch();
         $message = new Message();
         $message->dialog_id = $dialogId;
         $message->body = $body;
@@ -132,7 +135,7 @@ class MessageController extends Controller
      */
     public static function destroy($messageId)
     {
-       
+
         $message = Message::find($messageId);
 
         if ($message) {
