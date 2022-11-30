@@ -80,7 +80,7 @@ Route::middleware('auth:sanctum')->group(function () {
         return  ContactController::destroy($userId);
     });
 
- 
+
 
     //DIALOGS
 
@@ -104,7 +104,7 @@ Route::middleware('auth:sanctum')->group(function () {
         };
         return DialogController::getDialog($dialogId);
     });
-
+ // TODO: create method in Controller
     Route::put('sound-dialog', function (Request $request) {
         //$dialogId, $isSound
         $authUserId = Auth::user()->id;
@@ -118,6 +118,23 @@ Route::middleware('auth:sanctum')->group(function () {
         return response([
             'resultCode' => 1,
             'updatingDialog' => $resultDialog,
+
+        ]);
+    });
+
+    Route::put('sound-user', function (Request $request) {
+        //$isSound
+        $authUserId = Auth::user()->id;
+        $user = User::find($authUserId);
+        if($user->isSound != $request->isSound){
+            $user->isSound = $request->isSound;
+            $user->save();
+        }
+
+        $updatingUser = new UserResource($user);
+        return response([
+            'resultCode' => 1,
+            'updatingUser' => $updatingUser,
 
         ]);
     });
@@ -160,9 +177,7 @@ Route::middleware('auth:sanctum')->group(function () {
         }
     });
 
-    // Route::post('forward-message', function (Request $request) {
-    //     return MessageController::create($request->dialogId, $request->body);
-    // });
+
 
     Route::get('/testingevent', function () {
         $user = Auth::user();

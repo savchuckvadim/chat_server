@@ -46,11 +46,15 @@ class MessageController extends Controller
 
 
         //DISPATCH EVENT
-        SendMessage::dispatch($message);
+        $recipients = $message->recipients();
+        foreach ($recipients as $recipient) {
+            SendMessage::dispatch($message, $recipient->id);
+        }
+
 
         //SEND NOTIFICATION
-        $recipients = $message->recipients();
-        Notification::send($recipients, new NewMessage($message));
+        // $recipients = $message->recipients();
+        // Notification::send($recipients, new NewMessage($message));
 
         $message->isAuthorIsAuth = true;
         return response([

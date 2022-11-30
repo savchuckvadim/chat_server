@@ -15,6 +15,7 @@ class Message extends Model
         'id',
         'body',
         'author_id',
+        'dialog_id'
     ];
 
     public function dialog()
