@@ -56,8 +56,8 @@ services:
         ports:
             - "3306:3306"
         environment:
-            MYSQL_DATABASE: sp
-            MYSQL_ROOT_PASSWORD: sp
+            MYSQL_DATABASE: chat
+            MYSQL_ROOT_PASSWORD: chat
             SERVICE_TAGS: dev
             SERVICE_NAME: mysql
         volumes:
