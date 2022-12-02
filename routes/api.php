@@ -1,22 +1,14 @@
 <?php
 
-use App\Events\Presence;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DialogController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\UserController;
-use App\Http\Resources\DialogResource;
-use App\Http\Resources\UserCollection;
-use App\Http\Resources\UserResource;
-use App\Listeners\PresenceListener;
 use App\Models\Dialog;
-use App\Models\Message;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
-use App\Models\User;
-use App\Models\UserDialog;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -30,43 +22,24 @@ use App\Models\UserDialog;
 */
 
 Broadcast::routes(['middleware' => ['auth:sanctum']]);
+
 Route::middleware('auth:sanctum')->group(function () {
 
-    ///////////////TOKENS
-
-    // Route::post('/tokens/create', function (Request $request) {
-    //     $token = $request->user()->createToken($request->token_name);
-
-    //     return ['token' => $token->plainTextToken];
-    // });
-    // Route::post('/sanctum/token', TokenController::class);
 
     ///////////////USERS
 
-    Route::put('name', function (Request $request) {
-        $userId = Auth::user()->id;
-        $user = User::find($userId);
-        $updatingUser = $user->updateName($request->name);
-        return response([
-            'resultCode' => 1,
-            'updatingUser' => $updatingUser
-        ]);
-    });
     Route::get('/user', function (Request $request) {
-        $authUser = Auth::user();
-        $touchUser = User::find($authUser->id);
-        $touchUser->touch();
-        return $request->user();
+        //$request->user()
+        return UserController::getUser($request);
     });
-    Route::get('find-user/{name}', function ($name) {
-        $users = User::where('name', 'LIKE', "%{$name}%")->get();
-        $collection = new UserCollection($users);
 
-        if ($users) {
-            return response(['searchingUsers' => $collection]);
-        }
+    Route::get('find-user/{name}', function ($name) {
+        //name
+        return UserController::findUser($name);
     });
     Route::get('/users', function (Request $request) {
+        //`users?page=${currentPage}&count=${pageSize}`
+
         return UserController::getUsers($request);
     });
 
@@ -76,6 +49,16 @@ Route::middleware('auth:sanctum')->group(function () {
         return ContactController::create($request);
     });
 
+    Route::put('name', function (Request $request) {
+        //name
+        return UserController::updateName($request->name);
+    });
+
+    Route::put('sound-user', function (Request $request) {
+        //$isSound
+        UserController::updateSound($request->isSound);
+
+    });
     Route::delete('contact/{userId}', function ($userId) {
         return  ContactController::destroy($userId);
     });
@@ -84,18 +67,26 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //DIALOGS
 
-
     Route::get('dialogs', function () {
+        //
         return UserController::getDialogs();
     });
 
     Route::get('dialog/{dialogId}', function ($dialogId) {
+        //dialogId
         return DialogController::getDialog($dialogId);
     });
+
     Route::post('group-dialog', function (Request $request) {
         //$users, $dialogsName, $isGroup, id?=null if null->add else -> edit
         return DialogController::addGroupDialog($request, true);
     });
+
+    Route::put('sound-dialog', function (Request $request) {
+        //$dialogId, $isSound
+        return DialogController::updateSound($request->dialogId, $request->isSound);
+    });
+
     Route::delete('dialog/{dialogId}', function ($dialogId) {
         $dialog = Dialog::find($dialogId);
         if ($dialog) {
@@ -104,45 +95,11 @@ Route::middleware('auth:sanctum')->group(function () {
         };
         return DialogController::getDialog($dialogId);
     });
- // TODO: create method in Controller
-    Route::put('sound-dialog', function (Request $request) {
-        //$dialogId, $isSound
-        $authUserId = Auth::user()->id;
-        $relation = UserDialog::where('user_id', $authUserId)->where('dialog_id', $request->dialogId)->first();
-        // if ($relation->isSound != $request->isSound) {
-        $relation->isSound = $request->isSound;
-        $relation->save();
-        // }
-        $dialog = Dialog::find($request->dialogId);
-        $resultDialog = new DialogResource($dialog);
-        return response([
-            'resultCode' => 1,
-            'updatingDialog' => $resultDialog,
-
-        ]);
-    });
-
-    Route::put('sound-user', function (Request $request) {
-        //$isSound
-        $authUserId = Auth::user()->id;
-        $user = User::find($authUserId);
-        if($user->isSound != $request->isSound){
-            $user->isSound = $request->isSound;
-            $user->save();
-        }
-
-        $updatingUser = new UserResource($user);
-        return response([
-            'resultCode' => 1,
-            'updatingUser' => $updatingUser,
-
-        ]);
-    });
-
 
 
 
     //MESSAGES
+
     Route::post('message', function (Request $request) {
         //dialogId, body, isForwarded, isEdited
         return MessageController::create($request->dialogId, $request->body, $request->isForwarded, $request->isEdited);
@@ -158,7 +115,7 @@ Route::middleware('auth:sanctum')->group(function () {
         return MessageController::destroy($messageId);
     });
 
-    // TODO: create method in Controller
+
     Route::get('messages/{dialogId}', function ($dialogId) {
         $dialog = Dialog::find($dialogId);
         $messages = null;
@@ -178,13 +135,4 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
 
-
-    Route::get('/testingevent', function () {
-        $user = Auth::user();
-        Presence::dispatch($user);
-        return response([
-            'результат' => 'задиспатчилось',
-            // 'handle'=> PresenceListener::handle()
-        ]);
-    });
 });

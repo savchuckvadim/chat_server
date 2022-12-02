@@ -17,15 +17,11 @@ class MessageResource extends JsonResource
      */
     public function toArray($request)
     {
-        // return parent::toArray($request);
-        // $authUserId = Auth::user()->id;
+      
         $dialog = Dialog::find($this->dialog_id);
         $isGroup = $dialog->isGroup;
-       
-        // $isAuthorIsAuth = false;
-        // if ($this->author_id == $authUserId) {
-        //     $isAuthorIsAuth = true;
-        // }
+
+
         $author = User::find($this->author_id);
         $resultAuthor = new UserResource($author);
 

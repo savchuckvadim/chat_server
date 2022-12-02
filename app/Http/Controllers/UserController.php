@@ -33,6 +33,28 @@ class UserController extends Controller
         }
     }
 
+    public static function getUser($request)
+    {
+        $authUser = Auth::user();
+        $touchUser = User::find($authUser->id);
+        $touchUser->touch();
+
+        return response([
+            'resultCode' => 1,
+            'user' =>  $request->user()
+        ]);
+    }
+
+    public static function findUser($name)
+    {
+        $users = User::where('name', 'LIKE', "%{$name}%")->get();
+        $collection = new UserCollection($users);
+
+        if ($users) {
+            return response(['searchingUsers' => $collection]);
+        }
+    }
+
     public static function getDialogs()
     {
         $user = Auth::user();
@@ -41,15 +63,8 @@ class UserController extends Controller
         $dialogs = $user->dialogs;
         $resultDialogs = [];
         $resultGroupDialogs = [];
-        // $allDialogsUsers = [];
+
         foreach ($dialogs as $dialog) {
-            $dialogId = $dialog->id;
-
-            $dialogsMessages = $dialog->messages;
-
-            $resultDialogsUsers = [];
-
-
 
             if (!$dialog->isGroup) {
                 $resultDialog = new DialogResource($dialog);
@@ -63,8 +78,35 @@ class UserController extends Controller
             'resultCode' => 1,
             'dialogs' => array_reverse($resultDialogs),
             'groupDialogs' => array_reverse($resultGroupDialogs),
-            // 'authUser' => Auth::user(),
-            // '$dialogs' => $dialogs,
+
+
+        ]);
+    }
+
+    public static function updateName($name)
+    {
+        $userId = Auth::user()->id;
+        $user = User::find($userId);
+        $updatingUser = $user->updateName($name);
+        return response([
+            'resultCode' => 1,
+            'updatingUser' => $updatingUser
+        ]);
+    }
+
+    public static function updateSound($isSound)
+    {
+        $authUserId = Auth::user()->id;
+        $user = User::find($authUserId);
+        if ($user->isSound != $isSound) {
+            $user->isSound = $isSound;
+            $user->save();
+        }
+
+        $updatingUser = new UserResource($user);
+        return response([
+            'resultCode' => 1,
+            'updatingUser' => $updatingUser,
 
         ]);
     }

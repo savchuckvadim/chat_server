@@ -13,70 +13,7 @@ use Illuminate\Support\Facades\Auth;
 
 class DialogController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Dialog  $dialog
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Dialog $dialog)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Dialog  $dialog
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Dialog $dialog)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Dialog  $dialog
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Dialog $dialog)
-    {
-        //
-    }
+    
 
     /**
      * Remove the specified resource from storage.
@@ -250,6 +187,24 @@ class DialogController extends Controller
             'resultCode' => $resultCode,
             'dialog' => new DialogResource($dialog),
             'message' => $message,
+
+        ]);
+    }
+
+    public static function updateSound($dialogId, $isSound)
+    {
+        $authUserId = Auth::user()->id;
+        $relation = UserDialog::where('user_id', $authUserId)->where('dialog_id', $request->dialogId)->first();
+
+        $relation->isSound = $isSound;
+        $relation->save();
+
+        $dialog = Dialog::find($dialogId);
+        $resultDialog = new DialogResource($dialog);
+
+        return response([
+            'resultCode' => 1,
+            'updatingDialog' => $resultDialog,
 
         ]);
     }
