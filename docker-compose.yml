@@ -36,10 +36,10 @@ services:
             - app-network
 
     #Websocket Service
-    app-websockets:
-        image: app
+    myapp-websockets:
+        image: myapp
         command: [ 'php', 'artisan', 'websockets:serve']
-        container_name: app-websockets
+        container_name: myapp-websockets
         restart: unless-stopped
         working_dir: /var/www/
         volumes:
