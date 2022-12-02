@@ -13,9 +13,9 @@ services:
         environment:
             SERVICE_NAME: app
             SERVICE_TAGS: dev
-        working_dir: /var/www/
+        working_dir: /var/www/html/
         volumes:
-            - ./:/var/www/
+            - ./:/var/www/html/
             - ./php/laravel.ini:/usr/local/etc/php/conf.d/laravel.ini
         networks:
             - app-network
@@ -30,20 +30,20 @@ services:
             - "80:80"
             - "443:443"
         volumes:
-            - ./:/var/www/
+            - ./:/var/www/html/
             - ./nginx/conf.d/:/etc/nginx/conf.d/
         networks:
             - app-network
 
     #Websocket Service
-    myapp-websockets:
-        image: myapp
-        command: [ 'php', 'artisan', 'websockets:serve']
-        container_name: myapp-websockets
+    websockets:
+        image: app
+        command: [ 'php', 'artisan', 'websockets:serve' ]
+        container_name: websockets
         restart: unless-stopped
-        working_dir: /var/www/
+        working_dir: /var/www/html/
         volumes:
-            - ./:/var/www/
+            - ./:/var/www/html/
         ports:
             - ${LARAVEL_WEBSOCKETS_PORT}:6001
         networks:
