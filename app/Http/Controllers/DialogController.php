@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 
 class DialogController extends Controller
 {
-    
+
 
     /**
      * Remove the specified resource from storage.
@@ -194,7 +194,7 @@ class DialogController extends Controller
     public static function updateSound($dialogId, $isSound)
     {
         $authUserId = Auth::user()->id;
-        $relation = UserDialog::where('user_id', $authUserId)->where('dialog_id', $request->dialogId)->first();
+        $relation = UserDialog::where('user_id', $authUserId)->where('dialog_id', $dialogId)->first();
 
         $relation->isSound = $isSound;
         $relation->save();
