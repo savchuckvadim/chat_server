@@ -37,7 +37,7 @@ services:
             - app-network
 
     websockets:
-       image: app
+       image: cloudsigma.com/php
        command: ['php', 'artisan', 'websockets:serve']
        container_name: websockets
        restart: unless-stopped
