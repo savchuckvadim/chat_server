@@ -5,7 +5,8 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-domains=("45.130.43.17" "nmbrs-chat.store")
+domains=("45.147.178.168
+" "nmbrs-chat.store")
 rsa_key_size=4096
 data_path="./data/certbot"
 email="reactlaravelchat@gmail.com" # Adding a valid address is strongly recommended
