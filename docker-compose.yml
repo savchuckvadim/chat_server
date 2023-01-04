@@ -33,22 +33,25 @@ services:
         volumes:
             - ./:/var/www/html/
             - ./nginx/conf.d/:/etc/nginx/conf.d/
+            # - ./nginx/prod:/etc/nginx/conf.d/
+            - ./certbot/conf:/etc/letsencrypt
+            - ./certbot/www/html:/var/www/html/certbot
         networks:
             - app-network
 
+    #Websockets Service
     websockets:
-       image: cloudsigma.com/php
-       command: ['php', 'artisan', 'websockets:serve']
-       container_name: websockets
-       restart: unless-stopped
-       working_dir: /var/www/html/
-       volumes:
-         - ./:/var/www/html/
-       ports:
-         - ${LARAVEL_WEBSOCKETS_PORT}:6001
-       networks:
-         - app-network
-
+        image: cloudsigma.com/php
+        command: [ 'php', 'artisan', 'websockets:serve' ]
+        container_name: websockets
+        restart: unless-stopped
+        working_dir: /var/www/html/
+        volumes:
+            - ./:/var/www/html/
+        # ports:
+        #     - ${LARAVEL_WEBSOCKETS_PORT}:6001
+        networks:
+            - app-network
 
     #MySQL Service
     db:
@@ -66,6 +69,17 @@ services:
         volumes:
             - dbdata:/var/lib/mysql/
             - ./mysql/my.cnf:/etc/mysql/my.cnf
+        networks:
+            - app-network
+
+    #MCertbot Service
+    myapp-certbot:
+        image: certbot/certbot
+        container_name: myapp-certbot
+        volumes:
+            - ./docker-compose/certbot/conf:/etc/letsencrypt
+            - ./docker-compose/certbot/www:/var/www/certbot
+        entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
         networks:
             - app-network
 
