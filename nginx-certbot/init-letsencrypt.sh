@@ -5,7 +5,7 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-domains=("45.130.43.17:3000" "45.130.43.17" "nmbrs-chat.store")
+domains=("45.130.43.17" "nmbrs-chat.store")
 rsa_key_size=4096
 data_path="./data/certbot"
 email="reactlaravelchat@gmail.com" # Adding a valid address is strongly recommended
@@ -67,7 +67,7 @@ esac
 if [ $staging != "0" ]; then staging_arg="--staging"; fi
 
 docker-compose run --rm --entrypoint "\
-  certbot certonly --webroot -w /var/www/certbot \
+  certbot certonly --webroot -w /var/www/html/certbot \
     $staging_arg \
     $email_arg \
     $domain_args \
