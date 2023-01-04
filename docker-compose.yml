@@ -77,8 +77,8 @@ services:
         image: certbot/certbot
         container_name: myapp-certbot
         volumes:
-            - ./docker-compose/certbot/conf:/etc/letsencrypt
-            - ./docker-compose/certbot/www:/var/www/certbot
+            - /certbot/conf:/etc/letsencrypt
+            - /certbot/www:/var/www/html/certbot
         entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
         networks:
             - app-network
