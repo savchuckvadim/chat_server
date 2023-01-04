@@ -5,7 +5,7 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-domains=(45.67.57.72:3000 )
+domains=(45.130.43.17:3000 )
 rsa_key_size=4096
 data_path="./data/certbot"
 email="reactlaravelchat@gmail.com" # Adding a valid address is strongly recommended
