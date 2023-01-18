@@ -5,7 +5,7 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-domains=("45.147.179.218" "nmbrs-chat.store")
+domains=("nmbrs-chat.store")
 rsa_key_size=4096
 # data_path="./data/certbot"
 data_path="~/chat_server/certbot"
