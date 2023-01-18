@@ -15,6 +15,7 @@ services:
             SERVICE_TAGS: dev
         working_dir: /var/www/html/
         volumes:
+        # - папка в контейнере : папка/файл на хосте относительно этого файла
             - ./:/var/www/html/
             - ./php/laravel.ini:/usr/local/etc/php/conf.d/laravel.ini
         networks:
