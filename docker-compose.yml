@@ -74,7 +74,7 @@ services:
             - app-network
 
     #MCertbot Service
-    myapp-certbot:
+    certbot:
         image: certbot/certbot
         container_name: certbot
         volumes:
