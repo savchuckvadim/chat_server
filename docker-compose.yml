@@ -76,7 +76,7 @@ services:
     #MCertbot Service
     myapp-certbot:
         image: certbot/certbot
-        container_name: chat-certbot
+        container_name: certbot
         volumes:
             - ./certbot/conf:/etc/letsencrypt
             - ./certbot/www/html:/var/www/html/certbot
