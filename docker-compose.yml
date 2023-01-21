@@ -33,10 +33,10 @@ services:
 
         volumes:
             - ./:/var/www/html/
-            - ./nginx/conf.d/:/etc/nginx/conf.d/
+            - ./data/nginx/conf.d/:/etc/nginx/conf.d/
             # - ./nginx/prod:/etc/nginx/conf.d/
-            - ./certbot/conf:/etc/letsencrypt
-            - ./certbot/www/html:/var/www/html/certbot
+            - ./data/certbot/conf:/etc/letsencrypt
+            - ./data/certbot/www/html:/var/www/html/certbot
         networks:
             - app-network
 
@@ -78,8 +78,8 @@ services:
         image: certbot/certbot
         container_name: certbot
         volumes:
-            - ./certbot/conf:/etc/letsencrypt
-            - ./certbot/www/html:/var/www/html/certbot
+            - ./data/certbot/conf:/etc/letsencrypt
+            - ./data/certbot/www/html:/var/www/html/certbot
         entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
         networks:
             - app-network
