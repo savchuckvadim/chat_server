@@ -34,7 +34,6 @@ services:
         volumes:
             - ./:/var/www/html/
             - ./data/nginx/conf.d/:/etc/nginx/conf.d/
-            # - ./nginx/prod:/etc/nginx/conf.d/
             - ./data/certbot/conf:/etc/letsencrypt
             - ./data/certbot/www/html:/var/www/html/certbot
         networks:
